@@ -243,7 +243,8 @@ class Game:
         self.cb_frontier.draw(self.screen, self.font)
         self.cb_visited.draw(self.screen, self.font)
 
-        self._draw_stats(pygame.Rect(x + 14, 594, SIDEBAR_W - 28, 140))
+        self._draw_stats(pygame.Rect(x + 14, 580, SIDEBAR_W - 28,
+                                     168 if self.compare else 140))
         draw_legend(self.screen, self.font_small, pygame.Rect(x + 14, 760, SIDEBAR_W - 28, 40))
 
     def _label(self, x, y, text):
@@ -294,8 +295,17 @@ class Game:
                 self.screen.blit(st, (rect.x + 8, y + 18))
             y += 44
 
-        hint = self.font_small.render("A* explores the fewest cells.", True, COL_MUTED)
-        self.screen.blit(hint, (rect.x + 8, rect.y + rect.height - 20))
+        finished = {n: r for n, r in (self.results.items() if self.compare
+                                      else [(self.algo_name, self.results.get(self.algo_name))])}
+        done = {n: r for n, r in finished.items() if r is not None and r["nodes"]}
+        if done:
+            best = min(done, key=lambda n: done[n]["nodes"])
+            hint = (f"{best} explored the fewest cells"
+                    if len(done) > 1 else f"{best} explored {done[best]['nodes']} cells")
+        else:
+            hint = "Solve to compare cells explored."
+        hint_img = self.font_small.render(hint, True, COL_MUTED)
+        self.screen.blit(hint_img, (rect.x + 8, y + 6))
 
     # ------------------------------------------------------- event handling
     def _handle_keydown(self, key):
