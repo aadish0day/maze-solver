@@ -23,12 +23,26 @@ Interactive maze generator and pathfinding visualizer built with Python and Pyga
 
 ## Setup
 
+### Linux / macOS
+
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 pip install pygame-ce
 python main.py
 ```
+
+### Windows
+
+```powershell
+python -m venv .venv
+.venv\Scripts\activate
+pip install pygame-ce
+python main.py
+```
+
+> **Note:** `pygame-ce` (community edition) is used instead of the original `pygame`
+> because `pygame` has a bug that crashes with Python 3.14's font module.
 
 ## Project Structure
 
